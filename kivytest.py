@@ -15,9 +15,8 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 import smtplib, re, requests, json, time
 from bs4 import BeautifulSoup
-# remove this line when youre ready
-Window.size = (300,500)
-
+from kivy.uix.button import Button
+from kivy.clock import Clock
 
 
 toolbar_helper = '''
@@ -128,8 +127,11 @@ class LineSkipApp(MDApp):
         screen.add_widget(images)
         
 
-        btn_flat = MDRectangleFlatButton(text="Start", pos_hint={"center_x":0.5,"center_y":0.07}, on_release=self.start_skipping)
-        screen.add_widget(btn_flat)
+        btn_flat_start = MDRectangleFlatButton(text="Start", pos_hint={"center_x":0.3,"center_y":0.07}, on_release=self.button_start)
+        screen.add_widget(btn_flat_start)
+
+        btn_flat_stop = MDRectangleFlatButton(text="Stop", pos_hint={"center_x":0.7,"center_y":0.07}, on_release=self.button_stop)
+        screen.add_widget(btn_flat_stop)
 
 
         menu_items = [
@@ -206,6 +208,15 @@ class LineSkipApp(MDApp):
         checked_name = current_row[0]
         print(checked_name)
         self.add_row_checks(checked_name) # NAME
+
+    def button_start(self, obj):
+        Snackbar(text="Searching Started!").open()
+        Clock.schedule_interval(self.start_skipping,10)
+
+    def button_stop(self, obj):
+        Snackbar(text="Searching Stopped!").open()
+        Clock.unschedule(self.start_skipping)
+
 
     def start_skipping(self, obj):
 
